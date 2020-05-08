@@ -12,11 +12,20 @@ export class AppComponent {
   // title = 'oshop';
   constructor(private authService:AuthService,route:Router,private userService:UserService){
     authService.user$.subscribe(user => {
-      if(user){
+      if (!user) return;
+      // if(user){
+      //   userService.save(user);
+      //   let returnUrl = localStorage.getItem('returnUrl');
+      //   if(returnUrl){
+      //     localStorage.removeItem('returnUrl');
+      //     route.navigateByUrl(returnUrl);
+      //   }
+      // }
         userService.save(user);
         let returnUrl = localStorage.getItem('returnUrl');
-        route.navigateByUrl(returnUrl);
-      }
+        if(!returnUrl)return;
+          localStorage.removeItem('returnUrl');
+          route.navigateByUrl(returnUrl);
     })
   }
 }

@@ -1,0 +1,55 @@
+<div class="row">
+    <div class="col-md-6">
+        <form [formGroup]="addProductFormGroup" (ngSubmit)="ProductFormSubmitted()">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input id="title" name="title" formControlName="title" type="text" class="form-control">
+                <small class="text-danger" *ngIf="!!showErrorTitle">{{productCreateTitleValidationError}}</small>
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                    <input id="price" formControlName="price" name="price" type="number" class="form-control">
+                </div>
+                <small class="text-danger" *ngIf="!!showErrorPrice">{{productCreatePriceValidationError}}</small>
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select name="category" class="form-control" formControlName="category">
+                    <option value="">--- Select category ---</option>
+                    <option *ngFor="let c of categories$ |async" [value]="c.payload.key">
+                        {{c.payload.key | titlecase}}
+                    </option>
+                </select>
+                <small class="text-danger" *ngIf="!!showErrorCategory">{{productCreateCategoryValidationError}}</small>
+            </div>
+            <div class="form-group">
+                <label for="imageUrl">Image URL</label>
+                <input id="imageUrl" type="text" name="imageUrl" formControlName="imageUrl" class="form-control">
+                <small class="text-danger" *ngIf="!!showErrorImageUrl">{{productCreateImageUrlValidationError}}</small>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary">Save</button>
+                <button type="button" (click)="delete()" class="btn btn-danger m-2">Delete</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <div *ngIf="addProductFormGroup.controls['title'].value" class="card" style="width: 28rem;">
+            <img [src]="addProductFormGroup.controls['imageUrl'].value" class="card-img-top" *ngIf="addProductFormGroup.controls['imageUrl'].value">
+            <div class="card-body">
+                <h5 class="card-title">{{addProductFormGroup.controls['title'].value}}</h5>
+                <p class="card-text">{{addProductFormGroup.controls['price'].value | currency:'USD':true}}</p>
+            </div>
+        </div>
+        <!-- <div  class="card" style="width: 18rem;">
+                <img [src]="addProductFormGroup.controls['imageUrl'].value" class="card-img-top" >
+                <div class="card-body">
+                    <h5 class="card-title">{{addProductFormGroup.controls['title'].value}}</h5>
+                    <p class="card-text">{{addProductFormGroup.controls['price'].value | currency:'USD':true}}</p>
+                </div>
+            </div> -->
+            <!-- <product-card [product]="product" [show-actions]="false"></product-card> -->
+    </div>
+</div>
