@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-// import {AngularFireAuth} from 'angularfire2/auth';
-// import * as firebase from 'firebase';
-// import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { AppUser } from '../models/app-user';
 import { Router } from '@angular/router';
+import { ShoppingCartService } from '../shopping-cart.service';
+import { Observable } from 'rxjs';
+import { ShoppingCart } from '../models/shopping-cart';
 
 @Component({
   selector: 'app-bs-navbar',
@@ -12,21 +12,21 @@ import { Router } from '@angular/router';
   styleUrls: ['./bs-navbar.component.scss']
 })
 export class BsNavbarComponent implements OnInit {
-  // user$: Observable<firebase.User>;
-     appUser : AppUser;
+  appUser: AppUser;
+  cart$: Observable<ShoppingCart>;
 
-  // constructor(private AngularFireAuth:AngularFireAuth) {
-    constructor(private authService : AuthService,private route:Router) {
-    // AngularFireAuth.authState.subscribe(user => this.user =user);
-    // this.user$ = AngularFireAuth.authState;
-      authService.appUser$.subscribe(appUser => this.appUser = appUser);
-   }
-
-  ngOnInit(): void {
+  constructor(private authService: AuthService, private route: Router, private shoppingCartService: ShoppingCartService) {
   }
 
-  logout(){
-    // this.AngularFireAuth.auth.signOut()
+  async ngOnInit() {
+    this.authService.appUser$.subscribe(appUser => this.appUser = appUser);
+    this.cart$ = await this.shoppingCartService.getCartAll();
+    this.cart$.subscribe(resp=>{
+      console.log(resp);
+    })
+  }
+
+  logout() {
     this.authService.logout();
     this.route.navigate(['/']);
   }
