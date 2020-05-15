@@ -1,26 +1,28 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Product } from '../models/product';
 import { ShoppingCartService } from '../shopping-cart.service';
-import { ShoppingCart } from '../models/shopping-cart';
 
 @Component({
   // tslint:disable-next-line: component-selector
-  selector: 'product-card',
-  templateUrl: './product-card.component.html',
-  styleUrls: ['./product-card.component.scss']
+  selector: 'product-quantity',
+  templateUrl: './product-quantity.component.html',
+  styleUrls: ['./product-quantity.component.scss']
 })
-export class ProductCardComponent {
+export class ProductQuantityComponent {
 
   // tslint:disable-next-line: no-input-rename
   @Input('product') product: Product;
   // tslint:disable-next-line: no-input-rename
-  @Input('shopping-cart') shoppingCart: ShoppingCart;
+  @Input('shopping-cart') shoppingCart;
 
   constructor(private cartService: ShoppingCartService) { }
 
   addToCart() {
-    console.log(this.product);
     this.cartService.addToCart(this.product);
+  }
+
+  removeFromCart() {
+    this.cartService.removeFromCart(this.product);
   }
 
 }

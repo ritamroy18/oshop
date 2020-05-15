@@ -10,9 +10,26 @@ import { Observable } from 'rxjs';
 })
 export class ShoppingCartService {
 
-  public quantity
-    : number;
   constructor(private db: AngularFireDatabase) { }
+
+
+  async addToCart(product: Product) {
+    this.updateItem(product, 1);
+    // this.updateItem(product, 1);
+
+  }
+
+  async removeFromCart(product: Product) {
+    this.updateItem(product, -1);
+  }
+
+  async getCart(): Promise<Observable<ShoppingCart>> {
+    const cartId = await this.getOrCreateCartId();
+    return this.db.object('/shopping-carts/' + cartId).snapshotChanges()
+      // tslint:disable-next-line: no-string-literal
+      .pipe(map(x => new ShoppingCart(x.payload.toJSON()['items'])));
+  }
+
 
   private create() {
     return this.db.list('/shopping-carts').push({
@@ -20,17 +37,10 @@ export class ShoppingCartService {
     });
   }
 
-  async getCartAll(): Promise<Observable<ShoppingCart>> {
+  async clearCart() {
     const cartId = await this.getOrCreateCartId();
-    return this.db.object('/shopping-carts/' + cartId).valueChanges()
-      .pipe(map((x: any) => new ShoppingCart(x.items)));
+    this.db.object('/shopping-carts/' + cartId + '/items/').remove();
   }
-
-  async getCart(): Promise<AngularFireObject<ShoppingCart>> {
-    const cartId = await this.getOrCreateCartId();
-    return this.db.object('/shopping-carts/' + cartId);
-  }
-
 
   private getItem(cartId: string, productId: string) {
     return this.db.object('/shopping-carts/' + cartId + '/items/' + productId);
@@ -45,44 +55,49 @@ export class ShoppingCartService {
     return result.key;
   }
 
-  async addToCart(product: Product) {
-    this.updateItemQuantity(product, 1);
-  }
-
-  async removeFromCart(product: Product) {
-    this.updateItemQuantity(product, -1);
-  }
-
-  private async updateItemQuantity(product: Product, change: number) {
-    // const cartId = await this.getOrCreateCartId();
-    // const item$ = this.getItem(cartId, product.$key);
-    // item$
-    //   .valueChanges()
-    //   .pipe(take(1))
-    //   .subscribe((item: any) => {
-    //     if (item) { item$.update({ quantity: (item.quantity || 0) + change }); } else {
-    //       item$.set({
-    //         key: product.$key,
-    //         category: product.category,
-    //         title: product.title,
-    //         imageUrl: product.imageUrl,
-    //         price: product.price,
-    //         quantity: 1
-    //       });
-    //     }
-    //   });
-
+  // private async updateItemQuantity(product: Product, change: number) {
+    private async updateItem(product: Product, change: number) {
     const cartId = await this.getOrCreateCartId();
     const item$ = this.getItem(cartId, product.$key);
-    item$.snapshotChanges()
+    item$
+      .valueChanges()
       .pipe(take(1))
-      .pipe(map(response => {
-        const item = response.payload.toJSON();
-        return item as any;
-      }))
-      .subscribe(item => {
-        const { $key, ...rest } = product;
-        item$.update({ product: { ...rest }, quantity: (item ? item.quantity : 0) + change });
+      .subscribe(async (item: any) => {
+        const quantity = (item ? item.quantity : 0) + change ;
+        if (quantity === 0) { item$.remove(); } else {
+          item$.update({
+          title: product.title,
+          imageUrl: product.imageUrl,
+          price: product.price,
+          quantity
+          });
+        }
       });
+
+    // tslint:disable-next-line: no-shadowed-variable
+    // const cartId = await this.getOrCreateCartId();
+    // // tslint:disable-next-line: no-shadowed-variable
+    // const item$ = this.getItem(cartId, product.$key);
+    // item$.snapshotChanges()
+    //   .pipe(take(1))
+    //   .pipe(map(response => {
+    //     // tslint:disable-next-line: no-shadowed-variable
+    //     const item = response.payload.toJSON();
+    //     return item as any;
+    //   }))
+    //   // tslint:disable-next-line: no-shadowed-variable
+    //   .subscribe(item => {
+    //     const quantity = (item.quantity || 0) + change;
+
+    //     const { $key, ...rest } = product;
+    //     // item$.update({ product: { ...rest }, quantity: (item ? item.quantity : 0) + change });
+    //     item$.update({
+    //       title: product.title,
+    //       imageUrl: product.imageUrl,
+    //       price: product.price,
+    //       quantity: (item ? item.quantity : 0) + change
+    //      });
+
+    //   });
   }
 }

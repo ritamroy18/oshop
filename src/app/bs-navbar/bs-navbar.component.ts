@@ -15,15 +15,15 @@ export class BsNavbarComponent implements OnInit {
   appUser: AppUser;
   cart$: Observable<ShoppingCart>;
 
-  constructor(private authService: AuthService, private route: Router, private shoppingCartService: ShoppingCartService) {
-  }
+  constructor(
+    private authService: AuthService,
+    private route: Router,
+    private shoppingCartService: ShoppingCartService
+  ) { }
 
   async ngOnInit() {
     this.authService.appUser$.subscribe(appUser => this.appUser = appUser);
-    this.cart$ = await this.shoppingCartService.getCartAll();
-    this.cart$.subscribe(resp=>{
-      console.log(resp);
-    })
+    this.cart$ = await this.shoppingCartService.getCart();
   }
 
   logout() {
