@@ -15,39 +15,39 @@ import { ProductFormComponent } from './admin/product-form/product-form.componen
 
 
 const routes: Routes = [
-  //Routes For Normal Users
+  // Routes For Normal Users
   // {path:"",component:HomeComponent},
-  {path:"",component:ProductsComponent},
-  {path:"products",component:ProductsComponent},
-  {path:"shopping-cart",component:ShoppingCartComponent},
-  {path:"login",component:LoginComponent},
-  //Routes For Anonymous Users
-  {path:"check-out",component:CheckOutComponent,canActivate:[AuthGuard]},
-  {path:"order-success",component:OrderSuccessComponent,canActivate:[AuthGuard]},
-  {path:"my/orders",component:MyOrdersComponent,canActivate:[AuthGuard]},
+  {path: '', component: ProductsComponent},
+  {path: 'products', component: ProductsComponent},
+  {path: 'shopping-cart', component: ShoppingCartComponent},
+  {path: 'login', component: LoginComponent},
+  // Routes For Anonymous Users
+  {path: 'check-out', component: CheckOutComponent, canActivate: [AuthGuard]},
+  {path: 'order-success/:id', component: OrderSuccessComponent, canActivate: [AuthGuard]},
+  {path: 'my/orders', component: MyOrdersComponent, canActivate: [AuthGuard]},
 
-  //Routes For ADMIN 
+  // Routes For ADMIN
   {
-    path:"admin/products/new",
-    component:ProductFormComponent,
-    canActivate:[AuthGuard,AdminAuthGuard]
+    path: 'admin/products/new',
+    component: ProductFormComponent,
+    canActivate: [AuthGuard, AdminAuthGuard]
   },
   {
-    path:"admin/products/:id",
-    component:ProductFormComponent,
-    canActivate:[AuthGuard,AdminAuthGuard]
+    path: 'admin/products/:id',
+    component: ProductFormComponent,
+    canActivate: [AuthGuard, AdminAuthGuard]
   },
   {
-    path:"admin/products",
-    component:AdminProductsComponent,
-    canActivate:[AuthGuard,AdminAuthGuard]
+    path: 'admin/products',
+    component: AdminProductsComponent,
+    canActivate: [AuthGuard, AdminAuthGuard]
   },
   {
-    path:"admin/orders",
-    component:AdminOrdersComponent,
-    canActivate:[AuthGuard,AdminAuthGuard]
+    path: 'admin/orders',
+    component: AdminOrdersComponent,
+    canActivate: [AuthGuard, AdminAuthGuard]
   },
-  
+
 
 ];
 

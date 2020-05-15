@@ -1,1 +1,17 @@
-<p>my-orders works!</p>
+<h2>Orders</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>OrderId</th>
+      <th>Customer</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let o of orders$ | async">
+      <td>{{ o.$key }}</td>
+      <td>{{ o.shipping.name }}</td>
+      <td>{{ o.datePlaced | date }}</td>
+    </tr>
+  </tbody>
+</table>
