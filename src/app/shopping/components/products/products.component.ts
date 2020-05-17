@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 import { Product } from 'shared/models/product';
 import { ShoppingCartService } from 'shared/services/shopping-cart.service';
 import { ShoppingCart } from 'shared/models/shopping-cart';
+import { promise } from 'protractor';
+import { resolve } from 'dns';
 
 @Component({
   selector: 'app-products',
@@ -30,6 +32,8 @@ export class ProductsComponent implements OnInit {
   }
 
   async ngOnInit() {
+    // tslint:disable-next-line: no-shadowed-variable
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     this.cart$ = await this.shoppingCartService.getCart();
     this.populateProducts();
   }
