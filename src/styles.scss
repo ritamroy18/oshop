@@ -1,10 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "~bootstrap/dist/css/bootstrap.css";
+@import "~font-awesome/css/font-awesome.css";
+
+$primary-color :#c1d62e;
 
 body{
-
     padding: 80px;
+}
+
+.navbar-light .navbar-brand {
+    color: $primary-color !important;
+}
+
+.list-group-item.active {
+    background-color:$primary-color !important;
+    border-color:$primary-color !important;
 }
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
